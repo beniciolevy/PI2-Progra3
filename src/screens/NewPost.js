@@ -21,11 +21,6 @@ export default class NewPost extends Component {
       return;
     }
 
-    if (!auth.currentUser) {
-      this.setState({ error: 'Debes estar logueado para publicar' });
-      return;
-    }
-
 
     db.collection('posts').add({
       owner: auth.currentUser.email,

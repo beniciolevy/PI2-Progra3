@@ -62,16 +62,7 @@ export default class Profile extends Component {
 
   render() {
 
-    if (!auth.currentUser) {
-  return (
-    <View style={styles.container}>
-      <Text style={{fontSize: 20, marginBottom: 10}}>Debes estar logueado para ver tu perfil</Text>
-      <Pressable onPress={() => this.props.navigation.navigate('Login')}>
-        <Text style={{color: 'blue'}}>Ir al Login</Text>
-      </Pressable>
-    </View>
-  );
-}
+   
 
     return (
       <View style={styles.container}>
@@ -92,11 +83,11 @@ export default class Profile extends Component {
           )}
         />
 
-        {auth.currentUser && (
+         
   <Pressable style={styles.logoutButton} onPress={() => this.logout()}>
     <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
   </Pressable>
-)}
+
 
 
 

@@ -40,8 +40,6 @@ export default class Home extends Component {
       .catch(error => console.log(error));
   }
 
-
-
   render() {
     return (
       <View style={styles.container}>
@@ -56,13 +54,23 @@ export default class Home extends Component {
 
             return (
               <View style={styles.post}>
-                <Text style={styles.ownerText}>{item.owner} publico esto a las {new Date(item.createdAt).toLocaleString('es-AR' , {hour12: false})}</Text>
+                <Text style={styles.ownerText}>
+                  {item.owner} publicó esto a las {new Date(item.createdAt).toLocaleString('es-AR', { hour12: false })}
+                </Text>
                 <Text style={styles.postText}>{item.text}</Text>
 
-                <Pressable style={styles.likeButton} onPress={() => alreadyLiked ? this.unlikePost(item.id) : this.likePost(item.id)}>
-
+                <Pressable
+                  style={styles.likeButton}
+                  onPress={() => alreadyLiked ? this.unlikePost(item.id) : this.likePost(item.id)}
+                >
                   <Text style={styles.likeText}> ❤️ ({likesArray.length}) </Text>
+                </Pressable>
 
+                <Pressable
+                  style={styles.commentButton}
+                  onPress={() => this.props.navigation.navigate('Comments', { postId: item.id })}
+                >
+                  <Text style={styles.commentText}>Comentar</Text>
                 </Pressable>
               </View>
             );
@@ -98,7 +106,6 @@ const styles = StyleSheet.create({
   postText: {
     fontSize: 16
   },
-
   likeButton: {
     marginTop: 8,
     paddingVertical: 6,
@@ -111,6 +118,18 @@ const styles = StyleSheet.create({
   likeText: {
     color: '#007bff',
     fontWeight: 'bold'
+  },
+  commentButton: {
+    marginTop: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: '#28a745',
+    borderRadius: 6,
+    alignSelf: 'flex-start'
+  },
+  commentText: {
+    color: '#28a745',
+    fontWeight: 'bold'
   }
-
 });

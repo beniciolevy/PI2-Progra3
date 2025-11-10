@@ -26,6 +26,7 @@ export default class Register extends Component {
                 createdAt: Date.now()
             })
             .then(() => {
+                auth.signOut();
                 this.setState({ registered: true, error: "" });
                 this.props.navigation.navigate('Login');
             })

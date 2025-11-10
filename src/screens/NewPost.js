@@ -7,7 +7,8 @@ export default class NewPost extends Component {
     super(props);
     this.state = {
       text: '',
-      error: ''
+      error: '',
+      likes: []
     };
   }
 
@@ -24,11 +25,12 @@ export default class NewPost extends Component {
       this.setState({ error: 'Debes estar logueado para publicar' });
       return;
     }
-    
+
 
     db.collection('posts').add({
       owner: auth.currentUser.email,
       text: this.state.text,
+      likes: [],
       createdAt: Date.now()
     })
     .then(() => {

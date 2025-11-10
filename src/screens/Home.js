@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import firebase from 'firebase';
+import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
 import { db } from '../firebase/config';
+import { auth } from '../firebase/config';
 
 export default class Home extends Component {
   constructor(props) {
@@ -22,6 +24,24 @@ export default class Home extends Component {
       });
   }
 
+  likePost(postId){
+    db.collection("posts").doc(postId)
+    .update({
+      likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
+    })
+    .catch(error => console.log(error));
+  }
+
+  unlikePost(postId){
+    db.collection("posts").doc(postId)
+    .update({
+      likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
+    })
+    .catch(error => console.log(error));
+  }
+
+
+
   render() {
     return (
       <View style={styles.container}>
@@ -30,12 +50,23 @@ export default class Home extends Component {
         <FlatList
           data={this.state.posts}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.post}>
-              <Text style={styles.postOwner}>Publicado por: {item.owner}</Text>
-              <Text style={styles.postText}>{item.text}</Text>
-            </View>
-          )}
+          renderItem={({ item }) => {
+            let likesArray = item.likes ? item.likes : [];
+            let alreadyLiked = auth.currentUser && likesArray.includes(auth.currentUser.email);
+
+            return (
+              <View style={styles.post}>
+                <Text style={styles.postOwner}>Publicado por: {item.owner}</Text>
+                <Text style={styles.postText}>{item.text}</Text>
+
+                <Pressable style={styles.likeButton} onPress={() => alreadyLiked ? this.unlikePost(item.id) : this.likePost(item.id)}>
+
+                  <Text style={styles.likeText}> Me gusta ({likesArray.length}) </Text>
+
+                </Pressable>
+              </View>
+            );
+          }}
         />
       </View>
     );
@@ -66,5 +97,20 @@ const styles = StyleSheet.create({
   },
   postText: {
     fontSize: 16
-  }
+  },
+
+  likeButton: {
+  marginTop: 8,
+  paddingVertical: 6,
+  paddingHorizontal: 10,
+  borderWidth: 1,
+  borderColor: '#007bff',
+  borderRadius: 6,
+  alignSelf: 'flex-start'
+},
+likeText: {
+  color: '#007bff',
+  fontWeight: 'bold'
+}
+
 });

@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import { View, Text, StyleSheet, FlatList, TextInput, Pressable } from 'react-native';
@@ -24,24 +23,28 @@ export default class Comments extends Component {
         const data = doc.data();
         if (data) {
           this.setState({
-             post: {id: doc.id, owner: data.owner, text: data.text, likes: data.likes},
+            post: {
+              id: doc.id,
+              owner: data.owner,
+              text: data.text,
+              likes: data.likes,
+              createdAt: data.createdAt 
+            },
             comments: data.comments
-
-             });
-          
-        } else{
-          this.setState({comments: []})
+          });
+        } else {
+          this.setState({ comments: [] });
         }
       });
   }
-  
+
   addComment() {
     const postId = this.props.route.params.postId;
     const comment = {
       user: auth.currentUser.email,
       text: this.state.newComment
     };
-  
+
     db.collection('posts')
       .doc(postId)
       .update({
@@ -51,44 +54,46 @@ export default class Comments extends Component {
       .catch(err => console.log(err));
   }
 
-
   likePost(postId) {
-      db.collection("posts").doc(postId)
-        .update({
-          likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
-        })
-        .catch(error => console.log(error));
-    }
-  
-    unlikePost(postId) {
-      db.collection("posts").doc(postId)
-        .update({
-          likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
-        })
-        .catch(error => console.log(error));
-    }
+    db.collection("posts").doc(postId)
+      .update({
+        likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
+      })
+      .catch(error => console.log(error));
+  }
 
-
-
-
+  unlikePost(postId) {
+    db.collection("posts").doc(postId)
+      .update({
+        likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
+      })
+      .catch(error => console.log(error));
+  }
 
   render() {
-    const alreadyLiked= this.state.post && this.state.post.likes.includes(auth.currentUser.email)
+    const alreadyLiked = this.state.post && this.state.post.likes.includes(auth.currentUser.email);
+
     return (
-
       <View style={styles.container}>
-    {this.state.post && (
-      <View style={styles.postCaja}>
-        <Text style={styles.postOwner}>{this.state.post.owner}</Text>
-        <Text style={styles.postText}>{this.state.post.text}</Text>
+        {this.state.post && (
+          <View style={styles.postCaja}>
+            <Text style={styles.postOwner}>{this.state.post.owner}</Text>
+            <Text style={styles.postText}>{this.state.post.text}</Text>
+            <Text style={styles.postDate}>
+              Publicado el: {new Date(this.state.post.createdAt).toLocaleString('es-AR', { hour12: false })}
+            </Text>
 
-        <Pressable
-          style={styles.likeButton}
-          onPress={() => alreadyLiked ? this.unlikePost(this.state.post.id) : this.likePost(this.state.post.id)}
-        >
-          <Text style={styles.likeText}>❤️ ({this.state.post.likes.length})</Text>
-        </Pressable>
-      </View>
+            <Pressable
+              style={styles.likeButton}
+              onPress={() =>
+                alreadyLiked
+                  ? this.unlikePost(this.state.post.id)
+                  : this.likePost(this.state.post.id)
+              }
+            >
+              <Text style={styles.likeText}>❤️ ({this.state.post.likes.length})</Text>
+            </Pressable>
+          </View>
         )}
 
         <Text style={styles.title}>Comentarios</Text>
@@ -103,18 +108,17 @@ export default class Comments extends Component {
             </View>
           )}
         />
+
         <TextInput
           placeholder="Escribí un comentario..."
           value={this.state.newComment}
           onChangeText={(text) => this.setState({ newComment: text })}
           style={styles.input}
-          
         />
 
-        <Pressable onPress={() => this.addComment()} style={styles.button} >
+        <Pressable onPress={() => this.addComment()} style={styles.button}>
           <Text style={styles.buttonText}>Agregar Comentario</Text>
         </Pressable>
-
       </View>
     );
   }
@@ -141,7 +145,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5
   },
-
+  postDate: {
+    color: '#666',
+    fontSize: 12,
+    marginTop: 4
+  },
   likeButton: {
     marginTop: 8,
     paddingVertical: 6,
@@ -155,8 +163,6 @@ const styles = StyleSheet.create({
     color: '#007bff',
     fontWeight: 'bold'
   },
-
-
   title: {
     fontSize: 22,
     fontWeight: 'bold',
@@ -190,5 +196,4 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center'
   }
-
 });

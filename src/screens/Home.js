@@ -70,7 +70,7 @@ export default class Home extends Component {
                   style={styles.commentButton}
                   onPress={() => this.props.navigation.navigate('Comments', { postId: item.id })}
                 >
-                  <Text style={styles.commentText}>Comentar</Text>
+                  <Text style={styles.commentText}>Comentar 💬</Text>
                 </Pressable>
               </View>
             );

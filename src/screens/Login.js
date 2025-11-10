@@ -3,54 +3,54 @@ import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { auth } from '../firebase/config';
 
 export default class Login extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             email: "",
             password: "",
             error: ""
-        
+
         };
     }
 
-    onSubmit(){
+    onSubmit() {
 
-    if (this.state.email === "") {
-        this.setState({ error: "Ingresá un email" });
-        return;
+        if (this.state.email === "") {
+            this.setState({ error: "Ingresá un email" });
+            return;
+        }
+
+        if (this.state.password === "") {
+            this.setState({ error: "Ingresá una contraseña" });
+            return;
+        }
+
+        auth.signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then(() => {
+                this.setState({ error: "" });
+                this.props.navigation.navigate("Home");
+            })
+            .catch(() => {
+                this.setState({ error: "Usuario o contraseña incorrectos" });
+            });
     }
 
-    if (this.state.password === "") {
-        this.setState({ error: "Ingresá una contraseña" });
-        return;
-    }
-
-    auth.signInWithEmailAndPassword(this.state.email, this.state.password)
-    .then(() => {
-        this.setState({ error: "" });
-        this.props.navigation.navigate("Home");
-    })
-    .catch(() => {
-        this.setState({ error: "Usuario o contraseña incorrectos" });
-    });
-}
-
-    render(){
-        return(
+    render() {
+        return (
             <View style={styles.container}>
                 <Text style={styles.title}>Login</Text>
-
+                <Text style={styles.texto}>Email</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Email"
+                    placeholder="Ingrese su email"
                     value={this.state.email}
                     onChangeText={(text) => this.setState({ email: text })}
                     keyboardType="email-address"
                 />
-
+                <Text style={styles.texto}>Contraseña</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Contraseña"
+                    placeholder="Ingrese su contraseña"
                     secureTextEntry={true}
                     value={this.state.password}
                     onChangeText={(text) => this.setState({ password: text })}
@@ -73,38 +73,42 @@ export default class Login extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: { 
-        flex: 1, 
-        justifyContent: "center", 
-        padding: 20 
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        padding: 20
     },
-    title: { 
-        fontSize: 26, 
-        marginBottom: 20, 
-        textAlign: "center" 
+    title: {
+        fontSize: 26,
+        marginBottom: 20,
+        textAlign: "center"
     },
-    input: { 
-        borderWidth: 1, 
-        padding: 10, 
-        marginVertical: 8 
+    texto:{
+        alignSelf: 'flex-start',
+        fontWeight: 'bold'
     },
-    button: { 
-        backgroundColor: "blue", 
-        padding: 10, 
-        marginTop: 10 
+    input: {
+        borderWidth: 1,
+        padding: 10,
+        marginVertical: 8
     },
-    buttonText: { 
-        color: "white", 
-        textAlign: "center" 
+    button: {
+        backgroundColor: "blue",
+        padding: 10,
+        marginTop: 10
     },
-    error: { 
-        marginTop: 10, 
-        color: "red", 
-        textAlign: "center" 
+    buttonText: {
+        color: "white",
+        textAlign: "center"
     },
-    link: { 
-        marginTop: 15, 
-        textAlign: "center", 
-        color: "blue" 
+    error: {
+        marginTop: 10,
+        color: "red",
+        textAlign: "center"
+    },
+    link: {
+        marginTop: 15,
+        textAlign: "center",
+        color: "blue"
     }
 });

@@ -58,20 +58,23 @@ export default class Home extends Component {
                   {item.owner} publicó esto a las {new Date(item.createdAt).toLocaleString('es-AR', { hour12: false })}
                 </Text>
                 <Text style={styles.postText}>{item.text}</Text>
+                <View style={styles.botones} >
+                  <Pressable
+                    style={styles.likeButton}
+                    onPress={() => alreadyLiked ? this.unlikePost(item.id) : this.likePost(item.id)}
+                  >
+                    <Text style={styles.likeText}> ❤️ ({likesArray.length}) </Text>
+                  </Pressable>
 
-                <Pressable
-                  style={styles.likeButton}
-                  onPress={() => alreadyLiked ? this.unlikePost(item.id) : this.likePost(item.id)}
-                >
-                  <Text style={styles.likeText}> ❤️ ({likesArray.length}) </Text>
-                </Pressable>
+                  <Pressable
+                    style={styles.commentButton}
+                    onPress={() => this.props.navigation.navigate('Comments', { postId: item.id })}
+                  >
+                    <Text style={styles.commentText}>Comentar 💬</Text>
+                  </Pressable>
 
-                <Pressable
-                  style={styles.commentButton}
-                  onPress={() => this.props.navigation.navigate('Comments', { postId: item.id })}
-                >
-                  <Text style={styles.commentText}>Comentar 💬</Text>
-                </Pressable>
+                </View>
+
               </View>
             );
           }}
@@ -131,5 +134,10 @@ const styles = StyleSheet.create({
   commentText: {
     color: '#28a745',
     fontWeight: 'bold'
+  },
+  botones:{
+    flexDirection:'row',
+    alignItems:'center',
+    marginTop:10
   }
 });

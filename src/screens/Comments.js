@@ -77,11 +77,9 @@ export default class Comments extends Component {
       <View style={styles.container}>
         {this.state.post && (
           <View style={styles.postCaja}>
-            <Text style={styles.postOwner}>{this.state.post.owner}</Text>
+            <Text style={styles.postDate}>{this.state.post.owner} posteo esto el {new Date(this.state.post.createdAt).toLocaleString('es-AR', { hour12: false })}</Text>
             <Text style={styles.postText}>{this.state.post.text}</Text>
-            <Text style={styles.postDate}>
-              Publicado el: {new Date(this.state.post.createdAt).toLocaleString('es-AR', { hour12: false })}
-            </Text>
+          
 
             <Pressable
               style={styles.likeButton}
@@ -110,14 +108,14 @@ export default class Comments extends Component {
         />
 
         <TextInput
-          placeholder="Escribí un comentario..."
+          placeholder="Comenta aqui el post..."
           value={this.state.newComment}
           onChangeText={(text) => this.setState({ newComment: text })}
           style={styles.input}
         />
 
         <Pressable onPress={() => this.addComment()} style={styles.button}>
-          <Text style={styles.buttonText}>Agregar Comentario</Text>
+          <Text style={styles.buttonText}>Publicar Comentario</Text>
         </Pressable>
       </View>
     );

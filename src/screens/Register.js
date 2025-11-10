@@ -18,57 +18,57 @@ export default class Register extends Component {
         const { email, password, username } = this.state;
 
         auth.createUserWithEmailAndPassword(email, password)
-        .then(response => {
+            .then(response => {
 
-            db.collection('users').add({
-                email: email,
-                username: username,
-                createdAt: Date.now()
+                db.collection('users').add({
+                    email: email,
+                    username: username,
+                    createdAt: Date.now()
+                })
+                    .then(() => {
+                        auth.signOut();
+                        this.setState({ registered: true, error: "" });
+                        this.props.navigation.navigate('Login');
+                    })
+                    .catch(error => {
+                        this.setState({ error: "Error al guardar el usuario" });
+                    });
+
             })
-            .then(() => {
-                auth.signOut();
-                this.setState({ registered: true, error: "" });
-                this.props.navigation.navigate('Login');
-            })
-            .catch(error  => {
-                this.setState({ error: "Error al guardar el usuario" });
+            .catch(() => {
+                this.setState({ error: "No se pudo registrar" });
             });
-
-        })
-        .catch(() => {
-            this.setState({ error: "No se pudo registrar" });
-        });
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>Registro</Text>
-
+                <Text style={styles.texto}>Email</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Email"
+                    placeholder="Ingrese su email"
                     keyboardType="email-address"
                     value={this.state.email}
-                    onChangeText={ text => this.setState({ email: text }) }
+                    onChangeText={text => this.setState({ email: text })}
                 />
-
+                <Text style={styles.texto}>Nombre de usuario</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Nombre de usuario"
+                    placeholder="Ingrese su username"
                     value={this.state.username}
-                    onChangeText={ text => this.setState({ username: text }) }
+                    onChangeText={text => this.setState({ username: text })}
                 />
-
+                <Text style={styles.texto}>Contraseña</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Contraseña"
+                    placeholder="Ingrese su contraseña"
                     secureTextEntry={true}
                     value={this.state.password}
-                    onChangeText={ text => this.setState({ password: text }) }
+                    onChangeText={text => this.setState({ password: text })}
                 />
 
-                <Pressable style={styles.button} onPress={()=>this.onSubmit()}>
+                <Pressable style={styles.button} onPress={() => this.onSubmit()}>
                     <Text style={styles.buttonText}>Registrarme</Text>
                 </Pressable>
 
@@ -80,7 +80,7 @@ export default class Register extends Component {
                     <Text style={styles.success}>¡Registro exitoso!</Text>
                 )}
 
-                <Pressable 
+                <Pressable
                     style={styles.loginButton}
                     onPress={() => this.props.navigation.navigate('Login')}
                 >
@@ -92,51 +92,56 @@ export default class Register extends Component {
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center',
-        padding:20,
-        gap:15
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        gap: 15
     },
-    title:{
-        fontSize:28,
-        fontWeight:'bold',
-        marginBottom:20
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        marginBottom: 20
     },
-    input:{
-        width:'80%',
-        padding:10,
-        borderWidth:1,
-        borderColor:'#ccc',
-        borderRadius:6,
-        marginVertical:8
+    texto:{
+        alignSelf: 'flex-start',
+        marginLeft: '10%',
+        fontWeight: 'bold'
     },
-    button:{
-        backgroundColor:'#28a745',
-        padding:12,
-        borderRadius:6,
-        width:'80%',
-        alignItems:'center'
+    input: {
+        width: '80%',
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 6,
+        marginVertical: 8
     },
-    loginButton:{
-        backgroundColor:'#ff9500',
-        padding:12,
-        borderRadius:6,
-        width:'80%',
-        alignItems:'center',
-        marginTop:10
+    button: {
+        backgroundColor: '#28a745',
+        padding: 12,
+        borderRadius: 6,
+        width: '80%',
+        alignItems: 'center'
     },
-    buttonText:{
-        color:'white',
-        fontWeight:'bold'
+    loginButton: {
+        backgroundColor: '#ff9500',
+        padding: 12,
+        borderRadius: 6,
+        width: '80%',
+        alignItems: 'center',
+        marginTop: 10
     },
-    error:{
-        color:'red',
-        marginTop:10
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold'
     },
-    success:{
-        color:'green',
-        marginTop:10
+    error: {
+        color: 'red',
+        marginTop: 10
+    },
+    success: {
+        color: 'green',
+        marginTop: 10
     }
 });

@@ -61,7 +61,7 @@ export default class Home extends Component {
 
                 <Pressable style={styles.likeButton} onPress={() => alreadyLiked ? this.unlikePost(item.id) : this.likePost(item.id)}>
 
-                  <Text style={styles.likeText}> Me gusta ({likesArray.length}) </Text>
+                  <Text style={styles.likeText}> ❤️ ({likesArray.length}) </Text>
 
                 </Pressable>
               </View>

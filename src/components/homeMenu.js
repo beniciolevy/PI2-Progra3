@@ -13,6 +13,7 @@ export default function HomeMenu() {
       <Tab.Screen name="Home" component={Home} options={{ tabBarIcon: () => <FontAwesome5 name="home" size={24} /> }} />
       <Tab.Screen name="NewPost" component={NewPost} options={{ tabBarIcon: () => <FontAwesome5 name="plus" size={24} /> }} />
       <Tab.Screen name="Profile" component={Profile} options={{ tabBarIcon: () => <FontAwesome5 name="user" size={24} /> }} />
+      <Tab.Screen name="Comments" component={Comments} options={{ tabBarIcon: () => <FontAwesome5 name="user" size={24} /> }} />
     </Tab.Navigator>
   );
 }

@@ -24,20 +24,20 @@ export default class Home extends Component {
       });
   }
 
-  likePost(postId){
+  likePost(postId) {
     db.collection("posts").doc(postId)
-    .update({
-      likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
-    })
-    .catch(error => console.log(error));
+      .update({
+        likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
+      })
+      .catch(error => console.log(error));
   }
 
-  unlikePost(postId){
+  unlikePost(postId) {
     db.collection("posts").doc(postId)
-    .update({
-      likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
-    })
-    .catch(error => console.log(error));
+      .update({
+        likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
+      })
+      .catch(error => console.log(error));
   }
 
 
@@ -56,7 +56,7 @@ export default class Home extends Component {
 
             return (
               <View style={styles.post}>
-                <Text style={styles.postOwner}>Publicado por: {item.owner}</Text>
+                <Text style={styles.ownerText}>{item.owner} publico esto a las {new Date(item.createdAt).toLocaleString()}</Text>
                 <Text style={styles.postText}>{item.text}</Text>
 
                 <Pressable style={styles.likeButton} onPress={() => alreadyLiked ? this.unlikePost(item.id) : this.likePost(item.id)}>
@@ -100,17 +100,17 @@ const styles = StyleSheet.create({
   },
 
   likeButton: {
-  marginTop: 8,
-  paddingVertical: 6,
-  paddingHorizontal: 10,
-  borderWidth: 1,
-  borderColor: '#007bff',
-  borderRadius: 6,
-  alignSelf: 'flex-start'
-},
-likeText: {
-  color: '#007bff',
-  fontWeight: 'bold'
-}
+    marginTop: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: '#007bff',
+    borderRadius: 6,
+    alignSelf: 'flex-start'
+  },
+  likeText: {
+    color: '#007bff',
+    fontWeight: 'bold'
+  }
 
 });

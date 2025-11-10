@@ -43,6 +43,13 @@ export default class Profile extends Component {
     }
   }
 
+  deletePost(postId) {
+    db.collection('posts')
+      .doc(postId)
+      .delete()
+      .catch(() => alert('No se pudo eliminar el post'));
+  }
+
   logout() {
     this.setState({
       username: "",
@@ -78,7 +85,11 @@ export default class Profile extends Component {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.post}>
+              <Text style={styles.ownerText}>{this.state.username} publico esto a las {new Date(item.createdAt).toLocaleString()}</Text>
               <Text style={styles.postText}>{item.text}</Text>
+              <Pressable style={styles.deleteButton} onPress={() => this.deletePost(item.id)}>
+                <Text style={styles.deleteButtonText}>Eliminar post</Text>
+              </Pressable>
             </View>
           )}
         />
@@ -130,6 +141,24 @@ const styles = StyleSheet.create({
   },
   postText: {
     fontSize: 16
+  },
+  ownerText: {
+    fontSize: 10,
+    color: 'grey',
+    fontWeight: 'bold'
+  },
+  deleteButton: {
+    marginTop: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#dc3545',
+    borderRadius: 6,
+    alignSelf: 'flex-start'
+  },
+  deleteButtonText: {
+    color: '#dc3545',
+    fontWeight: 'bold'
   },
   emptyText: {
     textAlign: 'center',

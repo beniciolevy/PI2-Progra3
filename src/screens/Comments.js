@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import firebase from 'firebase';
 import { View, Text, StyleSheet, FlatList, TextInput, Pressable } from 'react-native';
 import { db } from '../firebase/config';
 import { auth } from '../firebase/config';
@@ -9,7 +10,8 @@ export default class Comments extends Component {
     super(props);
     this.state = {
       comments: [],
-      newComment: ""
+      newComment: "",
+      post: null
     };
   }
 
@@ -20,8 +22,12 @@ export default class Comments extends Component {
       .doc(postId)
       .onSnapshot(doc => {
         const data = doc.data();
-        if (data && data.comments) {
-          this.setState({ comments: data.comments });
+        if (data) {
+          this.setState({
+             post: {id: doc.id, owner: data.owner, text: data.text, likes: data.likes},
+            comments: data.comments
+
+             });
           
         } else{
           this.setState({comments: []})
@@ -37,7 +43,7 @@ export default class Comments extends Component {
     }
     let todosComments = this.state.comments
     todosComments.push(comment)
-    
+
     db.collection('posts').doc(postId)
       .update({
         comments: todosComments
@@ -46,9 +52,46 @@ export default class Comments extends Component {
       .catch(err => console.log(err));
   }
 
+
+  likePost(postId) {
+      db.collection("posts").doc(postId)
+        .update({
+          likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
+        })
+        .catch(error => console.log(error));
+    }
+  
+    unlikePost(postId) {
+      db.collection("posts").doc(postId)
+        .update({
+          likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
+        })
+        .catch(error => console.log(error));
+    }
+
+
+
+
+
   render() {
+    const alreadyLiked= this.state.post && this.state.post.likes.includes(auth.currentUser.email)
     return (
+
       <View style={styles.container}>
+    {this.state.post && (
+      <View style={styles.postCaja}>
+        <Text style={styles.postOwner}>{this.state.post.owner}</Text>
+        <Text style={styles.postText}>{this.state.post.text}</Text>
+
+        <Pressable
+          style={styles.likeButton}
+          onPress={() => alreadyLiked ? this.unlikePost(this.state.post.id) : this.likePost(this.state.post.id)}
+        >
+          <Text style={styles.likeText}>❤️ ({this.state.post.likes.length})</Text>
+        </Pressable>
+      </View>
+        )}
+
         <Text style={styles.title}>Comentarios</Text>
 
         <FlatList
@@ -84,6 +127,37 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f9f9f9'
   },
+  postCaja: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 15,
+    marginBottom: 15,
+    backgroundColor: '#fff'
+  },
+  postOwner: {
+    fontWeight: 'bold',
+    marginBottom: 5
+  },
+  postText: {
+    fontSize: 16,
+    marginBottom: 5
+  },
+
+  likeButton: {
+    marginTop: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: '#007bff',
+    borderRadius: 6,
+    alignSelf: 'flex-start'
+  },
+  likeText: {
+    color: '#007bff',
+    fontWeight: 'bold'
+  },
+
+
   title: {
     fontSize: 22,
     fontWeight: 'bold',

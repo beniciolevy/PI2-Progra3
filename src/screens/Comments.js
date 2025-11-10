@@ -34,19 +34,18 @@ export default class Comments extends Component {
         }
       });
   }
-
-  addComment(){
+  
+  addComment() {
     const postId = this.props.route.params.postId;
     const comment = {
       user: auth.currentUser.email,
       text: this.state.newComment
-    }
-    let todosComments = this.state.comments
-    todosComments.push(comment)
-
-    db.collection('posts').doc(postId)
+    };
+  
+    db.collection('posts')
+      .doc(postId)
       .update({
-        comments: todosComments
+        comments: firebase.firestore.FieldValue.arrayUnion(comment)
       })
       .then(() => this.setState({ newComment: '' }))
       .catch(err => console.log(err));

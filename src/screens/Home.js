@@ -56,7 +56,7 @@ export default class Home extends Component {
 
             return (
               <View style={styles.post}>
-                <Text style={styles.ownerText}>{item.owner} publico esto a las {new Date(item.createdAt).toLocaleString()}</Text>
+                <Text style={styles.ownerText}>{item.owner} publico esto a las {new Date(item.createdAt).toLocaleString('es-AR' , {hour12: false})}</Text>
                 <Text style={styles.postText}>{item.text}</Text>
 
                 <Pressable style={styles.likeButton} onPress={() => alreadyLiked ? this.unlikePost(item.id) : this.likePost(item.id)}>

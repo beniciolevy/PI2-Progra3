@@ -85,7 +85,7 @@ export default class Profile extends Component {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.post}>
-              <Text style={styles.ownerText}>{this.state.username} publico esto a las {new Date(item.createdAt).toLocaleString()}</Text>
+              <Text style={styles.ownerText}>{this.state.username} publico esto a las {new Date(item.createdAt).toLocaleString('es-AR' , {hour12: false})}</Text>
               <Text style={styles.postText}>{item.text}</Text>
               <Pressable style={styles.deleteButton} onPress={() => this.deletePost(item.id)}>
                 <Text style={styles.deleteButtonText}>Eliminar post</Text>

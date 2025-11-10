@@ -8,8 +8,8 @@ export default class Login extends Component {
         this.state = {
             email: "",
             password: "",
-            error: "",
-            loggedIn: false
+            error: ""
+        
         };
     }
 
@@ -27,7 +27,7 @@ export default class Login extends Component {
 
     auth.signInWithEmailAndPassword(this.state.email, this.state.password)
     .then(() => {
-        this.setState({ loggedIn: true, error: "" });
+        this.setState({ error: "" });
         this.props.navigation.navigate("Home");
     })
     .catch(() => {

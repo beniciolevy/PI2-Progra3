@@ -12,10 +12,19 @@ export default class NewPost extends Component {
   }
 
   handlePost() {
+    
+    
+
     if (this.state.text === '') {
       this.setState({ error: 'Debes escribir algo' });
       return;
     }
+
+    if (!auth.currentUser) {
+      this.setState({ error: 'Debes estar logueado para publicar' });
+      return;
+    }
+    
 
     db.collection('posts').add({
       owner: auth.currentUser.email,

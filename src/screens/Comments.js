@@ -45,6 +45,7 @@ export default class Comments extends Component {
       text: this.state.newComment
     };
 
+
     db.collection('posts')
       .doc(postId)
       .update({
@@ -83,13 +84,10 @@ export default class Comments extends Component {
 
             <Pressable
               style={styles.likeButton}
-              onPress={() =>
-                alreadyLiked
-                  ? this.unlikePost(this.state.post.id)
-                  : this.likePost(this.state.post.id)
-              }
+              onPress={() => alreadyLiked ? this.unlikePost(this.state.post.id): this.likePost(this.state.post.id)}
+
             >
-              <Text style={styles.likeText}>❤️ ({this.state.post.likes.length})</Text>
+              <Text style={styles.likeText}> ❤️ ({this.state.post.likes.length})</Text>
             </Pressable>
           </View>
         )}

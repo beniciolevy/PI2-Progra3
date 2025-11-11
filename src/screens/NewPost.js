@@ -13,14 +13,11 @@ export default class NewPost extends Component {
   }
 
   handlePost() {
-    
-    
 
     if (this.state.text === '') {
       this.setState({ error: 'Debes escribir algo' });
       return;
     }
-
 
     db.collection('posts').add({
       owner: auth.currentUser.email,
